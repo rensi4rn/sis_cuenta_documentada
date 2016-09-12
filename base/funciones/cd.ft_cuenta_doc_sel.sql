@@ -432,14 +432,12 @@ BEGIN
            
            
                 IF p_administrador !=1 THEN
-					IF p_id_usuario not in (42,56,137,138,140,453) THEN
                       v_filtro = ' ((ew.id_funcionario='||v_parametros.id_funcionario_usu::varchar||') or cdoc.id_usuario_reg='||p_id_usuario||' or cdoc.id_funcionario = '||v_parametros.id_funcionario_usu::varchar||'  ) and ';
-					END IF;
                 END IF;
+
                 v_filtro = v_filtro || ' tcd.sw_solicitud = ''no'' and ';
            END IF;
-           
-           
+                     
            
            v_importe_fac = '
                              
@@ -912,7 +910,44 @@ BEGIN
             return v_consulta;
 						
 		end; 
-    
+
+  /*********************************
+ 	#TRANSACCION:  'CD_REPCON_SEL'
+ 	#DESCRIPCION:	listado para reporte consolidado
+ 	#AUTOR:		admin
+ 	#FECHA:		13-09-2016
+	***********************************/
+
+	elsif(p_transaccion='CD_REPCON_SEL')then
+
+    	begin
+
+    	  --Sentencia de la consulta
+		  v_consulta := 'select cp.codigo_categoria,
+                               (
+                                 SELECT par.codigo || '' - '' || par.nombre_partida
+                                 FROM conta.f_get_config_relacion_contable(''CUECOMP'', cc.id_gestion,
+                                   cig.id_concepto_ingas, cc.id_centro_costo, ''No se encontro relación
+                                   contable para el conceto de gasto: '' || cig.desc_ingas || '' . < br
+                                   > Mensaje: '') rel
+                                      inner join pre.tpartida par on par.id_partida = rel.ps_id_partida
+                               )::varchar as partida ,
+                               sum(dc.precio_total_final) as importe
+                        from cd.trendicion_det rd
+                        inner join cd.tcuenta_doc c on c.id_cuenta_doc = rd.id_cuenta_doc
+                        inner join conta.tdoc_compra_venta dcv on dcv.id_doc_compra_venta = rd.id_doc_compra_venta
+                        inner join conta.tdoc_concepto dc on dc.id_doc_compra_venta = dcv.id_doc_compra_venta
+                        inner join pre.vpresupuesto_cc cc on cc.id_centro_costo = dc.id_centro_costo
+                        inner join pre.vcategoria_programatica cp on cp.id_categoria_programatica = cc.id_categoria_prog
+                        inner join param.tconcepto_ingas cig on cig.id_concepto_ingas = dc.id_concepto_ingas
+                        where c.id_proceso_wf = ' || v_parametros.id_proceso_wf || '
+                        group by codigo_categoria, partida
+                        order by codigo_categoria, partida';
+
+			raise notice 'consulta %', v_consulta;
+      return v_consulta;
+
+		end;
     
     else
 		raise exception 'Transaccion inexistente';
