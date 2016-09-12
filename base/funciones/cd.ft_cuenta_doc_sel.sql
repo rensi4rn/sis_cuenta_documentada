@@ -255,8 +255,11 @@ BEGIN
                             tcd.sw_solicitud,
                             cdoc.sw_max_doc_rend,
                             COALESCE(cdoc.num_rendicion,'''') as num_rendicion,
-                            importe_total_rendido
+                            importe_total_rendido,
+                            co.id_casa_oracion,
+                            co.codigo ||'' ''||co.nombre as desc_casa_oracion
 						from cd.tcuenta_doc cdoc
+                        inner join ccb.tcasa_oracion co on co.id_casa_oracion = cdoc.id_casa_oracion
                         inner join cd.ttipo_cuenta_doc tcd on tcd.id_tipo_cuenta_doc = cdoc.id_tipo_cuenta_doc
                         inner join param.tmoneda mon on mon.id_moneda = cdoc.id_moneda
                         inner join param.tdepto dep on dep.id_depto = cdoc.id_depto 

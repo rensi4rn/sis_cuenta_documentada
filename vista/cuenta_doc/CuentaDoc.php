@@ -318,6 +318,50 @@ Phx.vista.CuentaDoc = Ext.extend(Phx.gridInterfaz,{
             form:true
         },
         {
+			config: {
+				name: 'id_casa_oracion',
+                fieldLabel: 'Casa de Oración',
+                allowBlank: false,
+                emptyText:'Casa...',
+                store:new Ext.data.JsonStore(
+                {
+                    url: '../../sis_admin/control/CasaOracion/listarCasaOracion',
+                    id: 'id_casa_oracion',
+                    root: 'datos',
+                    sortInfo:{
+                        field: 'nombre',
+                        direction: 'ASC'
+                    },
+                    totalProperty: 'total',
+                    fields: ['id_casa_oracion','codigo','nombre','desc_lugar','desc_region'],
+                    // turn on remote sorting
+                    remoteSort: true,    
+                    baseParams:{par_filtro:'caor.nombre#reg.nombre#reg.nombre'}
+                
+                }),
+                valueField: 'id_casa_oracion',
+                displayField: 'nombre',
+                gdisplayField:'desc_casa_oracion',
+                hiddenName: 'id_casa_oracion',
+                triggerAction: 'all',
+                tpl:'<tpl for="."><div class="x-combo-list-item"><p>{nombre}</p><p>{desc_lugar} - {desc_region}</p> </div></tpl>',
+				
+                mode:'remote',
+                pageSize:50,
+                queryDelay:500,
+                listWidth:'280',
+                width:210,
+                minChars:2
+            },
+			type:'ComboBox',
+			filters:{pfiltro:'co.nombre',type:'string'},
+			bottom_filter: true,
+			id_grupo:1,
+			grid:true,
+			form:true
+			
+		},
+        {
             config: {
                 name: 'tipo_pago',
                 fieldLabel: 'Forma de Pago',
@@ -552,7 +596,8 @@ Phx.vista.CuentaDoc = Ext.extend(Phx.gridInterfaz,{
 		{name:'usr_mod', type: 'string'},'importe','obs','nro_correspondencia','importe_total_rendido',
 		'id_funcionario_cuenta_bancaria','sw_solicitud','importe_depositos',
 		'desc_funcionario_cuenta_bancaria','desc_tipo_cuenta_doc','importe_retenciones',
-		'desc_funcionario','desc_moneda','desc_depto','id_depto_conta','id_depto_lb','importe_documentos','dias_para_rendir'
+		'desc_funcionario','desc_moneda','desc_depto','id_depto_conta','id_depto_lb','importe_documentos','dias_para_rendir',
+		'desc_casa_oracion','id_casa_oracion'
 	
 	],
 	sortInfo:{
@@ -643,7 +688,7 @@ Phx.vista.CuentaDoc = Ext.extend(Phx.gridInterfaz,{
      	var me = this,
      	    configExtra = [],
      		obsValorInicial;
-     	   if(rec.data.estado == 'vbtesoreria' &&  rec.data.sw_solicitud == 'si' ){
+     	   if(rec.data.estado == 'vbregional' &&  rec.data.sw_solicitud == 'si' ){
 		      configExtra = [
 		      				{     
 								config:{

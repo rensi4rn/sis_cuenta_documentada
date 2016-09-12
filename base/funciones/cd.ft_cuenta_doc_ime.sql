@@ -103,7 +103,7 @@ BEGIN
                 
              IF exists(select 1 from orga.tuo_funcionario uof 
                        inner join orga.tuo uo on uo.id_uo = uof.id_uo and uo.estado_reg = 'activo'
-                       inner join orga.tnivel_organizacional no on no.id_nivel_organizacional = uo.id_nivel_organizacional and no.numero_nivel in (1)
+                       inner join orga.tnivel_organizacional no on no.id_nivel_organizacional = uo.id_nivel_organizacional and no.numero_nivel in (1,2)  --central o regional
                        where  uof.estado_reg = 'activo' and  uof.id_funcionario = v_parametros.id_funcionario ) THEN
                   
                   va_id_funcionario_gerente[1] = v_parametros.id_funcionario;
@@ -218,7 +218,8 @@ BEGIN
                 id_funcionario_gerente,
                 importe,
                 id_funcionario_cuenta_bancaria,
-                id_gestion
+                id_gestion,
+                id_casa_oracion
           	) values(
                 v_id_tipo_cuenta_doc,
                 v_id_proceso_wf,
@@ -243,7 +244,8 @@ BEGIN
                 va_id_funcionario_gerente[1],
                 v_parametros.importe,
                 v_parametros.id_funcionario_cuenta_bancaria,
-                v_id_gestion
+                v_id_gestion,
+                v_parametros.id_casa_oracion
 							
 			)RETURNING id_cuenta_doc into v_id_cuenta_doc;
             
@@ -263,6 +265,7 @@ BEGIN
                    and c.id_funcionario =  v_parametros.id_funcionario;
                    
             IF v_contador = v_limite_fondos THEN        
+                  
                   INSERT INTO  cd.tbloqueo_cd(
                                               id_usuario_reg,
                                               fecha_reg,
@@ -281,7 +284,9 @@ BEGIN
                                             );       
                    
              ELSEIF v_contador > v_limite_fondos THEN
+                 
                  raise exception 'Tiene  mas de % solicitudes abiertas', v_limite_fondos;
+                 
              END IF;
             
              -- inserta documentos en estado borrador si estan configurados
@@ -358,7 +363,8 @@ BEGIN
                 id_funcionario_cuenta_bancaria =  v_parametros.id_funcionario_cuenta_bancaria,
                 id_funcionario_gerente =  va_id_funcionario_gerente[1],
                 id_uo = v_id_uo,
-                id_gestion = v_id_gestion
+                id_gestion = v_id_gestion,
+                id_casa_oracion = v_parametros.id_casa_oracion
             where id_cuenta_doc=v_parametros.id_cuenta_doc;
                
 			--Definicion de la respuesta

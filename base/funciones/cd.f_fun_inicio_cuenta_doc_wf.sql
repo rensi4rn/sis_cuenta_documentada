@@ -140,7 +140,7 @@ BEGIN
        --raise exception 'ssss %',p_estado_anterior;
        
        -- si es tesoreria actuliza libro de bancos y cuenta bancaria (solo para la solicitud de fondos)
-      IF p_estado_anterior = 'vbtesoreria' and v_reg_cuenta_doc.sw_solicitud = 'si' THEN
+      IF p_estado_anterior in( 'vbtesoreria', 'vbregional' ) and v_reg_cuenta_doc.sw_solicitud = 'si' THEN
       
         update cd.tcuenta_doc   set 
             id_depto_lb =  p_id_depto_lb,

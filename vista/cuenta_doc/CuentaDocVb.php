@@ -111,12 +111,12 @@ Phx.vista.CuentaDocVb = {
       this.getBoton('btnObs').enable();
       this.getBoton('chkpresupuesto').enable(); 
       
-      if(this.sw_solicitud == 'si'){
+     // if(this.sw_solicitud == 'si'){
         this.getBoton('onBtnRepSol').enable(); 
-      }
-      else{
-      	this.getBoton('onBtnRepSol').disable(); 
-      }
+     // }
+     // //else{
+      //	this.getBoton('onBtnRepSol').disable(); 
+     // }
       if(this.historico == 'no'){
           
          if(data.estado == 'anulado' || data.estado == 'finalizado' || data.estado == 'pendiente'|| data.estado == 'contabilizado'|| data.estado == 'rendido'){

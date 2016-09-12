@@ -284,9 +284,18 @@ IS 'importe rendido, solo en solicitudesse llena cuando las rendiciones son fina
 
 
 
-/***********************************F-SCP-CD-RAC-1-24/05/2016****************************************/
+/***********************************I-SCP-CD-RAC-1-10/09/2016****************************************/
+
+
+--------------- SQL ---------------
+
+ALTER TABLE cd.tcuenta_doc
+  ADD COLUMN id_casa_oracion INTEGER;
+
+COMMENT ON COLUMN cd.tcuenta_doc.id_casa_oracion
+IS 'identifica la casa de oracion de donde se originaran los fondos';
 
 
 
-
+/***********************************F-SCP-CD-RAC-1-10/09/2016****************************************/
 

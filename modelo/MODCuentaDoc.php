@@ -67,7 +67,10 @@ class MODCuentaDoc extends MODbase{
 		$this->captura('sw_solicitud','VARCHAR');
 		$this->captura('sw_max_doc_rend','VARCHAR');
 		$this->captura('num_rendicion','VARCHAR');
-		$this->captura('importe_total_rendido','numeric');	
+		$this->captura('importe_total_rendido','numeric');
+		$this->captura('id_casa_oracion','integer');
+		$this->captura('desc_casa_oracion','text');	
+		
 		
 		
 		
@@ -176,6 +179,7 @@ class MODCuentaDoc extends MODbase{
 		$this->setParametro('id_estado_wf','id_estado_wf','int4');
 		$this->setParametro('importe','importe','numeric');
 		$this->setParametro('id_funcionario_cuenta_bancaria','id_funcionario_cuenta_bancaria','int4');
+		$this->setParametro('id_casa_oracion','id_casa_oracion','int4');
 		
 
 		//Ejecuta la instruccion
@@ -217,6 +221,7 @@ class MODCuentaDoc extends MODbase{
 		$this->setParametro('id_estado_wf','id_estado_wf','int4');
 		$this->setParametro('importe','importe','numeric');
 		$this->setParametro('id_funcionario_cuenta_bancaria','id_funcionario_cuenta_bancaria','int4');
+		$this->setParametro('id_casa_oracion','id_casa_oracion','int4');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
