@@ -54,7 +54,6 @@ Phx.vista.CuentaDocRen = {
 	   this.Atributos[this.getIndAtributo('id_funcionario')].form = false;
 	   this.Atributos[this.getIndAtributo('id_depto')].form = false; 
 	   this.Atributos[this.getIndAtributo('id_moneda')].form = false;
-		this.Atributos[this.getIndAtributo('id_tipo_cuenta_doc')].form = false;
 	   this.Atributos[this.getIndAtributo('tipo_pago')].form = false; 
 	   this.Atributos[this.getIndAtributo('id_funcionario_cuenta_bancaria')].form = false; 
 	   this.Atributos[this.getIndAtributo('nombre_cheque')].form = false; 
@@ -64,6 +63,7 @@ Phx.vista.CuentaDocRen = {
 	   this.Atributos[this.getIndAtributo('motivo')].config.qtip = 'Motivo de rendición';
 	   this.Atributos[this.getIndAtributo('motivo')].config.fieldLabel = 'Motivo';
 	   this.Atributos[this.getIndAtributo('importe')].form = false;
+	   this.Atributos[this.getIndAtributo('id_casa_oracion')].form = false;
 	   
 	   this.Atributos[this.getIndAtributo('importe')].config.renderer = function(value, p, record) {  
 				    var  saldo =  me.roundTwo(record.data.importe_documentos) + me.roundTwo(record.data.importe_depositos) -  me.roundTwo(record.data.importe_retenciones);

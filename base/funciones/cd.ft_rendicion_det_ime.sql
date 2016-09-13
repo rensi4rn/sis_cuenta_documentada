@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION cd.ft_rendicion_det_ime (
   p_tabla varchar,
   p_transaccion varchar
 )
-  RETURNS varchar AS
+RETURNS varchar AS
 $body$
 /**************************************************************************
  SISTEMA:		Cuenta Documentada
@@ -24,24 +24,28 @@ $body$
 
 DECLARE
 
-  v_nro_requerimiento    	integer;
-  v_parametros           	record;
-  v_id_requerimiento     	integer;
-  v_resp		            varchar;
-  v_nombre_funcion        text;
-  v_mensaje_error         text;
-  v_id_rendicion_det		integer;
-  v_registros				record;
-  v_rec					record;
-  v_tmp_resp				boolean;
-  v_importe_documentos	numeric;
-  v_importe_depositos		numeric;
-  v_tope					numeric;
-  v_sw_max_doc_rend       varchar;
-  v_cd_comprometer_presupuesto     varchar;
-  v_id_cuenta_doc			integer;
-  v_importe_fondo			numeric;
+  v_nro_requerimiento    				integer;
+  v_parametros           				record;
+  v_id_requerimiento     				integer;
+  v_resp		            			varchar;
+  v_nombre_funcion        				text;
+  v_mensaje_error         				text;
+  v_id_rendicion_det					integer;
+  v_registros							record;
+  v_rec									record;
+  v_tmp_resp							boolean;
+  v_importe_documentos					numeric;
+  v_importe_depositos					numeric;
+  v_tope								numeric;
+  v_sw_max_doc_rend       				varchar;
+  v_cd_comprometer_presupuesto     		varchar;
+  v_id_cuenta_doc						integer;
+  v_importe_fondo						numeric;
   v_verifica_rendiciones_menor_fondo	varchar;
+  v_cuenta_bancaria						record;
+  v_depositante							text;
+  v_id_finalidad						integer;
+  v_id_deposito							integer;
 
 BEGIN
 
@@ -394,7 +398,119 @@ BEGIN
 
     end;
 
+   /*********************************    
+ 	#	TRANSACCION:  'CD_DEPO_INS'
+ 	#	DESCRIPCION:	Insercion de registro de depositos en cuenta documentada, es copia de TES_DEP_INS en la funcion ft_proceso_caja_ime
+ 	#	AUTOR:		rensi	
+ 	#	FECHA:		17-05-2016 20:15:22
+	***********************************/
 
+	elsif(p_transaccion='CD_DEPO_INS')then
+    	BEGIN
+
+        IF v_parametros.id_cuenta_bancaria is NULL THEN
+        	raise exception 'No existe una cuenta bancaria a la cual se depositara';
+        END IF;
+
+        select 
+              dcb.id_depto,
+              int.nombre, 
+              cb.nro_cuenta 
+        into 
+            v_cuenta_bancaria
+        from tes.tdepto_cuenta_bancaria dcb
+        inner join tes.tcuenta_bancaria cb on cb.id_cuenta_bancaria=dcb.id_cuenta_bancaria
+		inner join param.tinstitucion int on int.id_institucion=cb.id_institucion
+        where dcb.id_cuenta_bancaria=v_parametros.id_cuenta_bancaria::integer;
+        
+        IF v_cuenta_bancaria.id_depto IS NULL THEN
+        	raise exception 'No existe un departamento de libro de bancos relacionado a la cuenta bancaria %',v_cuenta_bancaria.nombre;
+        END IF;
+        
+        -- esto esta mal no considera que otra persona este ahciendo el registro
+        SELECT 
+            p.nombre_completo1 
+          into 
+             v_depositante
+        FROM segu.tusuario u
+        INNER JOIN segu.vpersona p on p.id_persona=u.id_persona
+        WHERE u.id_usuario=p_id_usuario;
+
+
+    --OJO revisar esto de las finalidades y su utilidad
+    
+		IF v_parametros.tipo_deposito = 'FONDO ROTATIVO' THEN
+            
+            SELECT id_finalidad into v_id_finalidad
+            FROM tes.tfinalidad
+            WHERE nombre_finalidad ilike 'Fondo Rotativo'::varchar;
+            
+		ELSIF v_parametros.tipo_deposito = 'RETENCION' THEN
+        
+        	SELECT id_finalidad into v_id_finalidad
+            FROM tes.tfinalidad
+            WHERE nombre_finalidad ilike 'Proveedores'::varchar;
+            
+        ELSE
+        
+        	raise exception 'Tipo de Deposito inexistente';
+            
+        END IF;
+        
+        	
+        IF v_parametros.tipo_deposito = 'FONDO ROTATIVO' THEN
+        
+        
+        
+             v_id_deposito = tes.f_gestion_deposito(
+              					p_administrador::integer, 
+                                p_id_usuario::integer, 
+                                v_parametros.id_cuenta_bancaria::integer, 
+                                v_parametros.fecha::date, 
+                                NULL::integer,--p_id_libro_bancos_fk, 
+                                v_id_finalidad::integer, 
+                                NULL::integer,--id_int_comprobante 
+                                'deposito'::varchar,--p_tipo, 
+                                0::numeric,--p_importe_cheque, 
+                                v_parametros.importe_deposito::numeric, 
+                                NULL::integer, 
+                                ''::varchar,--p_nro_comprobante, 
+                                ''::varchar,--p_comprobante_sigma, 
+                                ''::varchar, --p_nro_liquidacion
+                                ('DEPOSITADO POR '||v_depositante)::varchar, 
+                                (v_cuenta_bancaria.nombre||' '||v_cuenta_bancaria.nro_cuenta||' DEPOSITO')::varchar, 
+                                 v_parametros.origen::Varchar,
+                                 v_cuenta_bancaria.id_depto::integer,
+                                 v_parametros.observaciones::Varchar,
+                                 v_parametros.nro_deposito::Varchar,
+                                 'CAJA_CHICA'::Varchar);
+                                 
+                                 
+                          
+        ELSE
+          raise exception 'tipo no reconocido';
+        END IF;
+            
+           
+        UPDATE tes.tts_libro_bancos
+        SET tabla=v_parametros.tabla,
+        columna_pk=v_parametros.columna_pk,
+        columna_pk_valor=v_parametros.columna_pk_valor
+        WHERE id_libro_bancos=v_id_deposito;
+        
+        --Definicion de la respuesta
+        v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Deposito de Caja almacenado(a) con exito'); 
+        v_resp = pxp.f_agrega_clave(v_resp,'columna_pk_valor',v_parametros.columna_pk_valor::varchar);
+        v_resp = pxp.f_agrega_clave(v_resp,'id_libro_bancos',v_id_deposito::varchar);
+        
+       
+        
+
+        --Devuelve la respuesta
+        return v_resp;
+        
+    	
+        END;
 
 
   else

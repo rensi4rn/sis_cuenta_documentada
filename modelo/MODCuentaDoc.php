@@ -141,6 +141,8 @@ class MODCuentaDoc extends MODbase{
 		
 		$this->captura('importe_solicitado','numeric');	
 		$this->captura('importe_total_rendido','numeric');	
+		$this->captura('id_casa_oracion','integer');
+		$this->captura('desc_casa_oracion','text');	
 		
 		
 		

@@ -158,7 +158,7 @@ BEGIN
             
                IF v_historico =  'no' THEN  
                   IF p_administrador !=1 THEN
-                      v_filtro = ' (ew.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' or   (ew.id_depto  in ('|| COALESCE(array_to_string(va_id_depto,','),'0')||') and cdoc.estado in( ''vbtesoreria'',''vbrendicion''))  ) and (lower(cdoc.estado)!=''contabilizado'') and (lower(cdoc.estado)!=''borrador'') and (lower(cdoc.estado)!=''finalizado'' ) and ';
+                      v_filtro = ' (ew.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' or   (ew.id_depto  in ('|| COALESCE(array_to_string(va_id_depto,','),'0')||') and cdoc.estado in(''vbregional'', ''vbtesoreria'',''vbrendicion''))  ) and (lower(cdoc.estado)!=''contabilizado'') and (lower(cdoc.estado)!=''borrador'') and (lower(cdoc.estado)!=''finalizado'' ) and ';
                   ELSE
                       v_filtro = '  (lower(cdoc.estado)!=''rendido'') and (lower(cdoc.estado)!=''contabilizado'') and (lower(cdoc.estado)!=''borrador'') and (lower(cdoc.estado)!=''finalizado'' ) and ';
                   END IF;
@@ -275,7 +275,7 @@ BEGIN
 			v_consulta:=v_consulta||v_parametros.filtro;
 			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
 
-            raise NOTICE '%', v_consulta;
+            raise notice '%', v_consulta;
 			--Devuelve la respuesta
 			return v_consulta;
 						
@@ -510,8 +510,11 @@ BEGIN
                             cdoc.nro_correspondencia,
                             COALESCE(cdoc.num_rendicion,'''') as num_rendicion,
                             cdo.importe::numeric as importe_solicitado,
-                            cdo.importe_total_rendido::numeric
+                            cdo.importe_total_rendido::numeric,
+                            co.id_casa_oracion,
+                            co.codigo ||'' ''||co.nombre as desc_casa_oracion
 						from cd.tcuenta_doc cdoc
+                        inner join ccb.tcasa_oracion co on co.id_casa_oracion = cdoc.id_casa_oracion
                         inner join cd.tcuenta_doc cdo on cdo.id_cuenta_doc = cdoc.id_cuenta_doc_fk
                         inner join cd.ttipo_cuenta_doc tcd on tcd.id_tipo_cuenta_doc = cdoc.id_tipo_cuenta_doc
                         inner join param.tmoneda mon on mon.id_moneda = cdoc.id_moneda
@@ -561,6 +564,7 @@ BEGIN
 			--Sentencia de la consulta de conteo de registros
 			v_consulta:='select count(cdoc.id_cuenta_doc)
 					    from cd.tcuenta_doc cdoc
+                        inner join ccb.tcasa_oracion co on co.id_casa_oracion = cdoc.id_casa_oracion
                         inner join cd.tcuenta_doc cdo on cdo.id_cuenta_doc = cdoc.id_cuenta_doc_fk
                         inner join cd.ttipo_cuenta_doc tcd on tcd.id_tipo_cuenta_doc = cdoc.id_tipo_cuenta_doc
                         inner join param.tmoneda mon on mon.id_moneda = cdoc.id_moneda

@@ -237,6 +237,8 @@ header("content-type: text/javascript; charset=UTF-8");
 				});
 
 			}, this);
+			
+			/*
 
 			this.Cmp.id_tipo_cuenta_doc.on('select', function(combo, rec, index) {
 				console.log(rec.data);
@@ -249,7 +251,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				}
 				this.Cmp.id_moneda.modificado = true;
 				this.Cmp.id_moneda.reset();
-			}, this);
+			}, this);*/
 
 			this.Cmp.tipo_pago.on('select', function(combo, rec, index) {
 				console.log('record', rec.data.variable);
@@ -283,17 +285,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			}, this);
 
 		},
-		onButtonEdit : function() {
-			Phx.vista.CuentaDoc.superclass.onButtonEdit.call(this);
-			if (this.Cmp.tipo_pago.getValue() == 'cheque') {
-				this.mostrarComponente(this.Cmp.nombre_cheque);
-				this.ocultarComponente(this.Cmp.id_funcionario_cuenta_bancaria);
-			} else {
-				this.ocultarComponente(this.Cmp.nombre_cheque);
-				this.mostrarComponente(this.Cmp.id_funcionario_cuenta_bancaria);
-			}
-
-		},
+		
 
 		onButtonNew : function() {
 			Phx.vista.CuentaDocReg.superclass.onButtonNew.call(this);

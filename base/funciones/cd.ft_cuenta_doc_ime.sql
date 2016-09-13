@@ -1,4 +1,5 @@
 --------------- SQL ---------------
+
 CREATE OR REPLACE FUNCTION cd.ft_cuenta_doc_ime (
   p_administrador integer,
   p_id_usuario integer,
@@ -184,13 +185,13 @@ BEGIN
 
 
             --recupera el tipo de cuenta documentada, SOLFONAVA, para solicutd de fondo en avance
-            /*
+            
             select
                tcd.id_tipo_cuenta_doc
             into
               v_id_tipo_cuenta_doc
             from cd.ttipo_cuenta_doc tcd
-            where tcd.codigo = 'SOLFONAVA'; */
+            where tcd.codigo = 'SOLFONAVA'; 
 
             --Sentencia de la insercion
         	insert into cd.tcuenta_doc(
@@ -220,7 +221,7 @@ BEGIN
                 id_gestion,
                 id_casa_oracion
           	) values(
-                v_parametros.id_tipo_cuenta_doc,
+                v_id_tipo_cuenta_doc,
                 v_id_proceso_wf,
                 v_parametros.nombre_cheque,
                 v_id_uo,
@@ -794,7 +795,8 @@ BEGIN
               c.id_funcionario_gerente,
               c.nro_tramite,
               c.id_gestion,
-              c.importe
+              c.importe,
+              c.id_casa_oracion
             into
               v_registros_cd
             from cd.tcuenta_doc c
@@ -908,7 +910,8 @@ BEGIN
                     id_cuenta_doc_fk,
                     motivo,
                     nro_correspondencia,
-                    num_rendicion
+                    num_rendicion,
+                    id_casa_oracion
 
                 ) values(
                     v_id_tipo_cuenta_doc,
@@ -933,7 +936,8 @@ BEGIN
                     v_parametros.id_cuenta_doc_fk, -- referencia a cuenta de solicitud
     				v_parametros.motivo,
                     v_parametros.nro_correspondencia,
-                    'R'||v_num_rend::varchar
+                    'R'||v_num_rend::varchar,
+                    v_registros_cd.id_casa_oracion
                 )RETURNING id_cuenta_doc into v_id_cuenta_doc;
 
 

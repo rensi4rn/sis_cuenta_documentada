@@ -307,7 +307,8 @@ Phx.vista.CuentaDoc = Ext.extend(Phx.gridInterfaz,{
 			grid: true,
 			form: true
 		},*/
-		{
+		
+		/*{
 			config:{
 				name:'id_tipo_cuenta_doc',
 				fieldLabel:'Tipo Fondo Avance',
@@ -357,7 +358,7 @@ Phx.vista.CuentaDoc = Ext.extend(Phx.gridInterfaz,{
 			//filters:{pfiltro:'ren.tipo',type:'string'},
 			grid:true,
 			form:true
-		},
+		},*/
 		{
             config:{
                 name: 'id_moneda',
