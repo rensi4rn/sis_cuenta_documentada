@@ -299,3 +299,40 @@ IS 'identifica la casa de oracion de donde se originaran los fondos';
 
 /***********************************F-SCP-CD-RAC-1-10/09/2016****************************************/
 
+/***********************************I-SCP-CD-RAC-1-11/10/2016****************************************/
+
+--Creadas sin explicacion posiblemente en boa OJO
+-- no fueron documentadas
+
+CREATE TABLE cd.tdeposito_cd (
+  id_deposito_cd SERIAL,
+  id_cuenta_doc INTEGER,
+  id_libro_bancos INTEGER,
+  importe_contable_deposito NUMERIC(20,2),
+  CONSTRAINT tdeposito_cd_pkey PRIMARY KEY(id_deposito_cd),
+  CONSTRAINT fk_tdeposito_cd__id_cuenta_doc FOREIGN KEY (id_cuenta_doc)
+    REFERENCES cd.tcuenta_doc(id_cuenta_doc)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE,
+  CONSTRAINT fk_tdeposito_cd__id_libro_bancos FOREIGN KEY (id_libro_bancos)
+    REFERENCES tes.tts_libro_bancos(id_libro_bancos)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE
+) INHERITS (pxp.tbase)
+
+WITH (oids = false);
+
+
+--------------- SQL ---------------
+
+ALTER TABLE cd.tcuenta_doc
+  ADD COLUMN id_funcionario_aprobador INTEGER;
+  
+  
+
+/***********************************F-SCP-CD-RAC-1-11/10/2016****************************************/
+
+
+

@@ -12,7 +12,7 @@ header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
 Phx.vista.CdDeposito = {    
-	require:'../../../sis_tesoreria/vista/deposito/Deposito.php',
+	require: '../../../sis_tesoreria/vista/deposito/Deposito.php',
 	requireclase:'Phx.vista.Deposito',
 	title:'Depositos',
 	nombreVista: 'CdDeposito',
@@ -20,10 +20,14 @@ Phx.vista.CdDeposito = {
 	tablaOrigen: 'cd.tcuenta_doc',
 	idOrigen: 'id_cuenta_doc',
 	idOrigenValor : '',
+	bedit : true,
+	bnew : true,
 	
 	ActSave: '../../sis_cuenta_documentada/control/RendicionDet/insertarCdDeposito',
 	ActDel: '../../sis_cuenta_documentada/control/RendicionDet/eliminarCdDeposito',
 	ActList: '../../sis_tesoreria/control/ProcesoCaja/listarCajaDeposito',
+	
+	
 	
 	constructor: function(config) {
 	   	Phx.vista.CdDeposito.superclass.constructor.call(this,config);
@@ -53,12 +57,13 @@ Phx.vista.CdDeposito = {
    
     liberaMenu:function(){
         var tb = Phx.vista.CdDeposito.superclass.liberaMenu.call(this);
+        
         if(this.maestro.estado == 'vbrendicion'){
 			this.getBoton('corregir_importe_contable').enable();
 		}else{
 			this.getBoton('corregir_importe_contable').disable();
 		}
-		/*
+		
 		if(Phx.CP.getPagina(this.idContenedorPadre).nombreVista == 'CuentaDocRen'){
         	if( this.maestro.estado == 'borrador'){     	            		
 				this.getBoton('new').enable();  
@@ -76,7 +81,7 @@ Phx.vista.CdDeposito = {
 				this.getBoton('new').disable();   
 			} 
         }
-        */
+        
         return tb
     },
     

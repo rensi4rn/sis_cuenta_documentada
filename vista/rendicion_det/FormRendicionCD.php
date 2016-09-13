@@ -18,6 +18,8 @@ Phx.vista.FormRendicionCD = {
 	mostrarFormaPago : false,
 	heightHeader: 245,
 	autorizacion: 'fondo_avance',
+	tipo_pres_gasto: 'gasto,administrativo',
+    tipo_pres_recurso: 'recurso,administrativo', 
 		
 	constructor: function(config) {		
 	   Phx.vista.FormRendicionCD.superclass.constructor.call(this,config);	   

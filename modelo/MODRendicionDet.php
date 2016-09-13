@@ -635,8 +635,8 @@ class MODRendicionDet extends MODbase{
 			$link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);		
 		  	$link->beginTransaction();
 			//Definicion de variables para ejecucion del procedimiento
-			$this->procedimiento='tes.ft_proceso_caja_ime';
-			$this->transaccion='TES_DEP_INS';
+			$this->procedimiento='cd.ft_rendicion_det_ime';
+			$this->transaccion='CD_DEPO_INS';
 			$this->tipo_procedimiento='IME';
 	
 			//Define los parametros para la funcion

@@ -1,5 +1,4 @@
 --------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION cd.ft_cuenta_doc_ime (
   p_administrador integer,
   p_id_usuario integer,
@@ -244,14 +243,10 @@ BEGIN
                 va_id_funcionario_gerente[1],
                 v_parametros.importe,
                 v_parametros.id_funcionario_cuenta_bancaria,
-<<<<<<< HEAD
                 v_id_gestion,
                 v_parametros.id_casa_oracion
 							
-=======
-                v_id_gestion
 
->>>>>>> ef31e01def9dd64eecf3d58a4bc78a268b5818d9
 			)RETURNING id_cuenta_doc into v_id_cuenta_doc;
 
             -------------------------------------
