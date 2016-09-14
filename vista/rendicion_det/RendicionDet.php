@@ -829,6 +829,7 @@ header("content-type: text/javascript; charset=UTF-8");
 					tipoDoc : me.tipoDoc,
 					tipo_form : tipo,
 					id_depto : me.maestro.id_depto_conta,
+					id_uo: me.maestro.id_uo_casa_oracion,
 					id_cuenta_doc : me.maestro.id_cuenta_doc,
 					datosOriginales : record,
 					readOnly: readOnly

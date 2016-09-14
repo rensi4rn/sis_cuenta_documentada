@@ -257,7 +257,8 @@ BEGIN
                             COALESCE(cdoc.num_rendicion,'''') as num_rendicion,
                             importe_total_rendido,
                             co.id_casa_oracion,
-                            co.codigo ||'' ''||co.nombre as desc_casa_oracion
+                            co.codigo ||'' ''||co.nombre as desc_casa_oracion,
+                            co.id_uo as id_uo_casa_oracion
 						from cd.tcuenta_doc cdoc
                         inner join ccb.tcasa_oracion co on co.id_casa_oracion = cdoc.id_casa_oracion
                         inner join cd.ttipo_cuenta_doc tcd on tcd.id_tipo_cuenta_doc = cdoc.id_tipo_cuenta_doc
@@ -512,7 +513,8 @@ BEGIN
                             cdo.importe::numeric as importe_solicitado,
                             cdo.importe_total_rendido::numeric,
                             co.id_casa_oracion,
-                            co.codigo ||'' ''||co.nombre as desc_casa_oracion
+                            co.codigo ||'' ''||co.nombre as desc_casa_oracion,
+                            co.id_uo as id_uo_casa_oracion
 						from cd.tcuenta_doc cdoc
                         inner join ccb.tcasa_oracion co on co.id_casa_oracion = cdoc.id_casa_oracion
                         inner join cd.tcuenta_doc cdo on cdo.id_cuenta_doc = cdoc.id_cuenta_doc_fk

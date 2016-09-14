@@ -24,7 +24,7 @@ Phx.vista.SolicitudRendicionDet=Ext.extend(Phx.gridInterfaz,{
 				iconCls: 'badelante',
 				disabled:false,
 				handler:this.sigEstado,
-				tooltip: '<b>Mandar Revision</b><p>Mandar a revision facturas</p>'
+				tooltip: '<b>Mandar Revisión</b><p>Mandar a revisión facturas</p>'
 			}
 		);
 		
@@ -506,7 +506,8 @@ Phx.vista.SolicitudRendicionDet=Ext.extend(Phx.gridInterfaz,{
 										  id_solicitud_efectivo : me.id_solicitud_efectivo,
 										  datosOriginales: record
 										  },
-									id_moneda_defecto : me.id_moneda
+									id_moneda_defecto : me.id_moneda,
+									id_uo_casa_oracion
 								}, 
 								this.idContenedor,
 								'FormRendicion');         
